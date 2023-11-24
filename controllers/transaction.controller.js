@@ -54,6 +54,16 @@ async function initiateTransaction (req, res) {
 
 async function handleTransaction (req, res) {
 	try {
+		// use hash in the webhook to verify the authenticity of the payload
+		const hash = process.env.FLUTTERWAVE_WEBHOOK_HASH
+		const signature = req.headers.verif-hash
+		if (!signature) {
+			return res.status(401).json({success: false, message: 'No secret hash provided'})
+		}
+		if (signature != hash) {
+			return res.status(401).json({success: false, message: 'Invalid secret hash'})
+		}
+		
 		// get payload from flutterwave and find the user and transaction records in the database
 		const payload = req.body
 		const email = payload.data.customer.email
@@ -83,13 +93,60 @@ async function handleTransaction (req, res) {
 
 async function getTransactions (req, res) {
 	try {
+		// get the id of the logged-in user
+		const user_id = req.user.id
+		// find the user's transactions
+		const transactions = await TransactionModel.find({user_id}).select('-__v')
+		// check if there are transaction records
+		if (!transactions) {
+			return res.status(404).json({success: false, message: 'No transactions found'})
+		}
+		// return response
+		res.status(200).json({success: true, message: transactions})
+
+	} catch (error) {
+		console.error(error.message)
+		res.status(500).json({success: false, message: 'Internal server error'})
+	}
+}
+
+async function searchTransactions (req, res) {
+	try {
+		// get the search query which is the tx_ref as well as page and limit for pagination from the request body
+		const {tx_ref} = req.body
+		const {page} = +req.body || 1 // set defaults
+		const {limit} = +req.body || 10 // set defaults
+
+		// check if tx_ref is provided
+		if (!tx_ref) {
+			return res.status(400).json({success: false, message: 'Please provide tx_ref'})
+		}
+
+		// implement pagination
+		const skip = (page - 1) * limit
+		const transactions = await TransactionModel.find({$text: {$search: tx_ref}}).skip(skip).limit(limit)
+
+		// check if there are transactions available for the search
+		if (!transactions || transactions.length < 1) {
+			return res.status(404).json({success: false, message: 'No transactions found'})
+		}
+
+		// count the relevant search documents in the transaction collection and find the total pages
+		const totalCount = await TransactionModel.countDocuments({$text: {$search: tx_ref}})
+		const totalPages = Math.ceil(totalCount / limit)
+
+		// return the transaction search results and the pagination details
+		res.status(200).json({sucess: true, message: {transactions, pagination: {page, limit, totalPages, totalCount}}})
 		
 	} catch (error) {
-		
+		console.error(error.message)
+		res.status(500).json({success: false, message: 'Internal server error'})
 	}
 }
 
 module.exports = {
 	initiateTransaction,
-	handleTransaction
+	handleTransaction,
+	getTransactions,
+	searchTransactions
 }

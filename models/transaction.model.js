@@ -37,6 +37,9 @@ const transactionSchema = mongoose.Schema({
 	}
 }, {timestamps: true})
 
+// enable search text indexes
+transactionSchema.index = ({tx_ref: 'text'})
+
 const TransactionModel = mongoose.model('Transaction', transactionSchema)
 
 module.exports = TransactionModel

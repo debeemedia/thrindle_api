@@ -3,7 +3,7 @@ const serverApp = require('../server')
 const app = request(serverApp)
 
 describe('POST /api/users/register', () => {
-	test('registers a new user', async () => {
+	test('should register a new user', async () => {
 		const option = {
 			email: 'okekedeborah@gmail.com',
 			username: 'debee',

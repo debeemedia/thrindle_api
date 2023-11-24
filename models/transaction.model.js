@@ -26,7 +26,7 @@ const transactionSchema = mongoose.Schema({
 		default: 'NGN'
 	},
 	amount: {
-		type: String,
+		type: Number,
 		required: true
 	},
 	status: {

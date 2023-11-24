@@ -12,7 +12,7 @@ describe('POST /api/users/login', () => {
 		expect(response.status).toBe(200)
 		expect(response.body).toHaveProperty('success', true)
 	})
-	test('allows a user to login', async () => {
+	test('should allow a user to login', async () => {
 		const option = {
 			email: 'okekedeborah@gmail.com',
 			password: 'password'

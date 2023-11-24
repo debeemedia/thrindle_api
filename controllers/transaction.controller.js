@@ -8,7 +8,7 @@ const base_api_url = 'https://api.flutterwave.com/v3'
 async function initiateTransaction (req, res) {
 	try {
 		// destructure user input from request body
-		const {amount} = req.body
+		const {amount} = +req.body
 
 		// find the id of the logged-in user, then find the user from the database
 		const user_id = req.user.id

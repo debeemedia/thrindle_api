@@ -1,4 +1,5 @@
 const UserModel = require("../models/user.model");
+const { buildEmailTemplate, sendMail } = require("../utils/send.mail");
 
 async function register (req, res) {
 	try {
@@ -38,6 +39,15 @@ async function register (req, res) {
 		})
 
 		await user.save()
+
+		// send welcome message with verification link to user
+		const emailOption = {
+			to: email,
+			from: 'Thrindle',
+			subject: 'Registration Successful',
+			html: await buildEmailTemplate('welcome.message.ejs', user)
+		}
+		sendMail(emailOption, res)
 
 		// return response to client
 		res.status(201).json({success: true, message: 'User registration successful'})

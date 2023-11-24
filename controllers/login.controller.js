@@ -27,8 +27,12 @@ async function login (req, res) {
 		// compare password and issue token
 		bcrypt.compare(password, user.password, (err, result) => {
 			if (result === true) {
+				// check if user is verified
+				if (!user.verified) {
+					return res.status(401).json({successs: false, message: 'User is not verified'})
+				}
 				const token = jwt.sign({id: user._id, username: user.username}, process.env.TOKEN_SECRET, {expiresIn: '1h'})
-
+				// issue token
 				return res.status(200).json({success: true, message: token})
 			} else {
 				return res.status(401).json({success: false, message: 'Incorrect credentials'})

@@ -3,8 +3,13 @@ require('dotenv').config()
 const express = require('express')
 const app = express()
 const mongoose = require('mongoose')
+const ejs = require('ejs')
 const cors = require('cors')
 const router = require('./routes/routes')
+
+// set views
+app.set('views', './views')
+app.set('view engine', 'ejs')
 
 // use middleware
 app.use(cors())

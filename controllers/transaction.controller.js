@@ -2,6 +2,7 @@ require('dotenv').config()
 const TransactionModel = require("../models/transaction.model")
 const UserModel = require("../models/user.model")
 const debeerandomgen = require('debeerandomgen')
+const { buildEmailTemplate, sendMail } = require('../utils/send.mail')
 const base_api_url = 'https://api.flutterwave.com/v3'
 
 async function initiateTransaction (req, res) {
@@ -43,6 +44,15 @@ async function initiateTransaction (req, res) {
 		})
 		await transaction.save()
 
+		// send mail to the user
+		const emailOption = {
+			to: user.email,
+			from: 'Thrindle',
+			subject: 'Transaction Initiation Successful',
+			html: await buildEmailTemplate('transaction.creation.ejs', transaction)
+		}
+		sendMail(emailOption, res)
+
 		// send a response
 		res.status(201).json({success: true, message: 'Transaction initiated successfully'})
 
@@ -63,7 +73,7 @@ async function handleTransaction (req, res) {
 		if (signature != hash) {
 			return res.status(401).json({success: false, message: 'Invalid secret hash'})
 		}
-		
+
 		// get payload from flutterwave and find the user and transaction records in the database
 		const payload = req.body
 		const email = payload.data.customer.email
@@ -77,10 +87,27 @@ async function handleTransaction (req, res) {
 			// update transaction record to completed
 			await TransactionModel.findByIdAndUpdate(transaction_id, {status: 'completed'})
 
+			// send mail to the user
+			const emailOption = {
+				to: user.email,
+				from: 'Thrindle',
+				subject: 'Transaction Completed',
+				html: await buildEmailTemplate('transaction.successful.ejs', transaction)
+			}
+			sendMail(emailOption, res)
+
 		} else if (payload.data.status === 'failed') {
 			// update transaction record to failed
 			await TransactionModel.findByIdAndUpdate(transaction_id, {status: 'failed'})
 
+			// send mail to the user
+			const emailOption = {
+				to: user.email,
+				from: 'Thrindle',
+				subject: 'Transaction Failed',
+				html: await buildEmailTemplate('transaction.failed.ejs', transaction)
+			}
+			sendMail(emailOption, res)
 		}
 		// acknowledge webhook and return 200 status code to flutterwave
 		res.status(200)

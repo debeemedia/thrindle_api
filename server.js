@@ -14,6 +14,9 @@ app.set('view engine', 'ejs')
 // use middleware
 app.use(cors())
 app.use(express.json())
+
+// use router
+app.get('/', async (req, res) => res.send('deBee welcomes you to Thrindle!'))
 app.use('/api', router)
 
 // define port
@@ -25,7 +28,9 @@ const db = mongoose.connection
 db.on('error', () => console.log('Error connecting to database'))
 db.once('connected', () => console.log('Database connected'))
 
-// listen on server
+// run server
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
 })
+
+module.exports = app

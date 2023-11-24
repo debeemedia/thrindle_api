@@ -29,9 +29,6 @@ const transactionSchema = mongoose.Schema({
 		type: String,
 		required: true
 	},
-	narration: {
-		type: String
-	},
 	status: {
 		type: String,
 		enum: ['pending', 'completed', 'failed'],

@@ -14,7 +14,7 @@ app.use(express.json())
 // define port
 const port = process.env.PORT || 7001
 
-// c
+// connect to database
 mongoose.connect(process.env.MONGODB_URL)
 const db = mongoose.connection
 db.on('error', () => console.log('Error connecting to database'))

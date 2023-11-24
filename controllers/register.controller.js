@@ -44,7 +44,7 @@ async function register (req, res) {
 
 	} catch (error) {
 		console.error(error.message)
-		res.status(500).json({success: true, message: 'Internal server error'})
+		res.status(500).json({success: false, message: 'Internal server error'})
 	}
 }
 

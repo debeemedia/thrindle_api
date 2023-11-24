@@ -16,8 +16,16 @@ app.use(cors())
 app.use(express.json())
 
 // use router
-app.get('/', async (req, res) => res.send('deBee welcomes you to Thrindle!'))
+app.get('/', async (req, res) => res.send('deBee welcomes you to Thrindle! For api, go to /api'))
 app.use('/api', router)
+
+// error-handling middleware
+app.use((err, req, res, next) => {
+	if (err) {
+		res.json({success: false, message: err.message})
+	}
+	next()
+})
 
 // define port
 const port = process.env.PORT || 7001

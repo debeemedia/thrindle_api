@@ -7,13 +7,13 @@ const ejs = require('ejs')
 const cors = require('cors')
 const router = require('./routes/routes')
 
-// set views
-app.set('views', './views')
-app.set('view engine', 'ejs')
-
 // use middleware
 app.use(cors())
 app.use(express.json())
+
+// set views
+app.set('views', './views')
+app.set('view engine', 'ejs')
 
 // use router
 app.get('/', async (req, res) => res.send('deBee welcomes you to Thrindle! For api, go to /api'))

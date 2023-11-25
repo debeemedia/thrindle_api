@@ -1,5 +1,5 @@
 const UserModel = require("../models/user.model");
-const { buildEmailTemplate, sendMail } = require("../utils/send.mail");
+const { buildEmailTemplate, sendMail } = require("../utils/send.mail")
 
 async function register (req, res) {
 	try {

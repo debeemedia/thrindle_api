@@ -13,7 +13,7 @@ const transporter = nodemailer.createTransport({
 
 // function to render email templates
 async function buildEmailTemplate (fileName, data) {
-  ejs.renderFile(`${views}/${fileName}`, data)
+  ejs.renderFile(`views/${fileName}`, data)
 }
 
 // function to send mail
@@ -27,7 +27,6 @@ async function sendMail (option, res) {
 			if (err) {
 				return console.log('Error sending mail:', err.message)
 			}
-			console.log('info', info);
 			console.log('Mail sent', info.response);
 		})
 	} catch (error) {

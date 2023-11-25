@@ -7,6 +7,6 @@ const userRouter = express.Router()
 userRouter.post('/register', register)
 userRouter.post('/login', login)
 
-userRouter.post('/verify', verifyMail, sendConfirmationMail)
+userRouter.get('/verify', verifyMail, sendConfirmationMail)
 
 module.exports = userRouter

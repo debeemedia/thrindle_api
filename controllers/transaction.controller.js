@@ -54,7 +54,7 @@ async function initiateTransaction (req, res) {
 			subject: 'Transaction Initiation Successful',
 			html: await buildEmailTemplate('transaction.creation.ejs', transaction)
 		}
-		sendMail(emailOption, res)
+		await sendMail(emailOption, res)
 
 		// send a response
 		res.status(201).json({success: true, message: 'Transaction created successfully', paymentInitiation: response.data})
@@ -94,7 +94,7 @@ async function handleTransaction (req, res) {
 				subject: 'Transaction Successful',
 				html: await buildEmailTemplate('transaction.successful.ejs', transaction)
 			}
-			sendMail(emailOption, res)
+			await sendMail(emailOption, res)
 
 		} else if (payload.data.status === 'failed') {
 			// update transaction record to failed
@@ -107,7 +107,7 @@ async function handleTransaction (req, res) {
 				subject: 'Transaction Failed',
 				html: await buildEmailTemplate('transaction.failed.ejs', transaction)
 			}
-			sendMail(emailOption, res)
+			await sendMail(emailOption, res)
 		}
 		// acknowledge webhook and return 200 status code to flutterwave
 		res.status(200)

@@ -47,7 +47,7 @@ async function register (req, res) {
 			subject: 'Registration Successful',
 			html: await buildEmailTemplate('welcome.message.ejs', user)
 		}
-		sendMail(emailOption, res)
+		await sendMail(emailOption, res)
 
 		// return response to client
 		res.status(201).json({success: true, message: 'User registration successful'})

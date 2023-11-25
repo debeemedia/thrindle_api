@@ -25,6 +25,8 @@ In case of errors, the API responds with appropriate HTTP status codes and infor
 
 ### Endpoints
 
+#### USERS:
+
 #### Register a User
 * Endpoint: /users/register
 * Method: POST
@@ -56,6 +58,14 @@ Status Code: 400 (Bad Request)
 ```
 {
   "success": false,
+  "message": "Please provide required fields"
+}
+```
+
+Status Code: 400 (Bad Request)
+```
+{
+  "success": false,
   "message": "Email already exists"
 }
 ```
@@ -71,7 +81,7 @@ Status Code: 400 (Bad Request)
 #### Log In
 * Endpoint: /users/login
 * Method: POST
-* Description: Allows a registered user to log in.
+* Description: Allows a registered and verified user to log in (NB: Click the verification link sent in the mail on registration to get verified)
 * Parameters:
  Request body: a JSON object with keys password (mandatory) and either username or email (one of them mandatory).
 * Examples of request body:
@@ -91,10 +101,19 @@ Status Code: 400 (Bad Request)
 
 * Response:
 Status Code: 200 (OK)
+A token is sent in the response.message; this token must be provided in the headers for authorization in protected routes
 ```
 {
   "success": true,
-  "message": token
+  "message": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1NjFkOTdiMjJkZmY3OGU4ZGRmYjg0MSIsInVzZXJuYW1lIjoiZGViZWUiLCJpYXQiOjE3MDA5MTMwMjcsImV4cCI6MTcwMDkxNjYyN30.hWaUuR7VuvWmFwgvtzI7qyA7emYvaDUIz8S80UpQMuQ"
+}
+```
+
+Status Code: 400 (Bad Request)
+```
+{
+  "success": false,
+  "message": "Please provide login details"
 }
 ```
 
@@ -106,7 +125,7 @@ Status Code: 401 (Unauthorized)
 }
 ```
 
-Status Code: 403 (Forbidden)
+Status Code: 401 (Unauthorized)
 ```
 {
  "success": false,
@@ -117,7 +136,11 @@ Status Code: 403 (Forbidden)
 Status Code: 404 (Not Found)
 ```
 {
- "success": false,
- "message": "User is not registered"
+  "success": false,
+  "message": "User not found"
 }
 ```
+
+#### TRANSACTIONS:
+
+#### Initiate a Transaction

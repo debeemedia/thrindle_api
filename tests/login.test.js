@@ -1,6 +1,15 @@
+require('dotenv').config()
 const request = require('supertest')
 const serverApp = require('../server')
 const app = request(serverApp)
+
+beforeEach(async () => {
+    await mongoose.connect(process.env.MONGODB_URL)
+})
+
+afterEach(async () => {
+    await mongoose.connection.close()
+})
 
 describe('POST /api/users/login', () => {
 	test('allows a user to login', async () => {

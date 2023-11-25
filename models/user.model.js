@@ -38,10 +38,9 @@ const userSchema = mongoose.Schema({
 
 // hash user password before saving
 userSchema.pre('save', async (next) => {
-	const user = this
 	try {
-		if (user.isModified('password')) {
-			const hashedPassword = await bcrypt.hash(user.password, 10)
+		if (this.isModified('password')) {
+			const hashedPassword = await bcrypt.hash(this.password, 10)
 			user.password = hashedPassword
 
 		}

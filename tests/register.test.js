@@ -2,6 +2,14 @@ const request = require('supertest')
 const serverApp = require('../server')
 const app = request(serverApp)
 
+beforeEach(async () => {
+	await mongoose.connect(process.env.MONGODB_URL)
+})
+
+afterEach(async () => {
+	await mongoose.connection.close()
+})
+
 describe('POST /api/users/register', () => {
 	test('should register a new user', async () => {
 		const option = {

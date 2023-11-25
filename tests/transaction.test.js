@@ -4,21 +4,12 @@ const request = require('supertest')
 const serverApp = require('../server')
 const app = request(serverApp)
 
-let server
-
 beforeAll(async () => {
-	await mongoose.connect(process.env.MONGODB_URL, {
-		useNewUrlParser: true,
-		useUnifiedTopology: true,
-	});
+	await mongoose.connect(process.env.MONGODB_URL)
 });
 
 afterAll(async () => {
 	await mongoose.connection.close()
-	if (server) {
-		await server.close();
-
-	}
 })
 
 describe('POST /api/transactions/create', () => {

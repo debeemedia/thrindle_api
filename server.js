@@ -28,7 +28,7 @@ app.use((err, req, res, next) => {
 })
 
 // define port
-const port = process.env.PORT || 7002
+const port = process.env.PORT || 7000
 
 // connect to database
 mongoose.connect(process.env.MONGODB_URL)

@@ -4,32 +4,23 @@ const request = require('supertest')
 const serverApp = require('../server')
 const app = request(serverApp)
 
-let server
-
 beforeAll(async () => {
-	await mongoose.connect(process.env.MONGODB_URL, {
-		useNewUrlParser: true,
-		useUnifiedTopology: true,
-	});
+	await mongoose.connect(process.env.MONGODB_URL)
 });
 
 afterAll(async () => {
 	await mongoose.connection.close()
-	if (server) {
-		await server.close();
-
-	}
 })
 
 describe('POST /api/users/register', () => {
 	test('should register a new user', async () => {
 		const option = {
-			email: 'debeemediasolutions@gmail.com',
-			username: 'debeemedia',
+			email: 'user1@gmail.com',
+			username: 'user1',
 			password: 'password',
-			first_name: 'Deborah',
-			last_name: 'Okeke',
-			phone_number: '08109210257'
+			first_name: 'User',
+			last_name: 'Test',
+			phone_number: '081023456789'
 		}
 		const response = await app.post('/api/users/register').send(option)
 		expect(response.status).toBe(201)

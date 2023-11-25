@@ -3,6 +3,7 @@ const TransactionModel = require("../models/transaction.model")
 const UserModel = require("../models/user.model")
 const debeerandomgen = require('debeerandomgen')
 const { buildEmailTemplate, sendMail } = require('../utils/send.mail')
+const axios = require('axios')
 const base_api_url = 'https://api.flutterwave.com/v3'
 
 async function initiateTransaction (req, res) {

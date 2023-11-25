@@ -5,7 +5,7 @@ const serverApp = require('../server')
 const app = request(serverApp)
 
 beforeEach(async () => {
-    await mongoose.connect(process.env.MONGODB_URL)
+    await mongoose.connect(process.env.MONGODB_TEST_URL)
 })
 
 afterEach(async () => {
@@ -19,8 +19,9 @@ describe('POST /api/users/login', () => {
 			password: 'password'
 		}
 		const response = await app.post('/api/users/login').send(option)
-		expect(response.status).toBe(200)
-		expect(response.body).toHaveProperty('success', true)
+		expect(response.status).not.toBe(200)
+		expect(response.body).toHaveProperty('success', false)
+		expect(response.body).toHaveProperty('message', 'User is not verified')
 	})
 	test('should allow a user to login', async () => {
 		const option = {

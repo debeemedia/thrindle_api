@@ -4,7 +4,7 @@ async function verifyMail (req, res, next) {
 	try {
 		// get the email from the query string and find the user from the database
 		const email = req.query.email
-		const user = await UserModelfindOne({email})
+		const user = await UserModel.findOne({email})
 		// check if user exists
 		if (!user) {
 			return res.status(404).json({success: false, message: 'User not found'})

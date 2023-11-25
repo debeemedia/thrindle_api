@@ -4,12 +4,22 @@ const request = require('supertest')
 const serverApp = require('../server')
 const app = request(serverApp)
 
-beforeEach(async () => {
-    await mongoose.connect(process.env.MONGODB_URL)
-})
+let server
 
-afterEach(async () => {
+beforeAll(async () => {
+    await mongoose.connect(process.env.MONGODB_URL, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
+});
+  
+
+afterAll(async () => {
     await mongoose.connection.close()
+    if (server) {
+        await server.close();
+
+    }
 })
 
 describe('POST /api/users/login', () => {

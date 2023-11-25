@@ -37,7 +37,7 @@ async function sendConfirmationMail (req, res) {
 			to: user.email,
 			from:'Thrindle',
 			subject: 'Verification Successful',
-			html: await buildEmailTemplate('confirm.verification.ejs', data)
+			html: await buildEmailTemplate('confirm.verification.ejs', user)
 		}
 		await sendMail(emailOption, res)
 		// redirect the user from mail

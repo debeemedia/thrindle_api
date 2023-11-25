@@ -137,21 +137,42 @@ async function getTransactions (req, res) {
 	}
 }
 
+async function getTransactionByRef (req, res) {
+	try {
+		// get the id of the logged-in user
+		const user_id = req.user.id
+		// destructure the tx_ref from the request params
+		const {tx_ref} = req.params
+		// find the user's transaction by tx_ref
+		const transaction = await TransactionModel.find({user_id}, {tx_ref}).select('-__v')
+		// check if there is a transaction record
+		if (!transaction) {
+			return res.status(404).json({success: false, message: 'No transaction found'})
+		}
+		// return response
+		res.status(200).json({success: true, message: transaction})
+
+	} catch (error) {
+		console.error(error.message)
+		res.status(500).json({success: false, message: 'Internal server error'})
+	}
+}
+
 async function searchTransactions (req, res) {
 	try {
-		// get the search query which is the tx_ref as well as page and limit for pagination from the request body
-		const {tx_ref} = req.body
+		// get the search query which is the transaction status as well as page and limit for pagination from the request body
+		const {status} = req.body
 		const {page} = +req.body || 1 // set defaults
 		const {limit} = +req.body || 10 // set defaults
 
-		// check if tx_ref is provided
-		if (!tx_ref) {
-			return res.status(400).json({success: false, message: 'Please provide tx_ref'})
+		// check if status is provided
+		if (!status) {
+			return res.status(400).json({success: false, message: 'Please provide status'})
 		}
 
 		// implement pagination
 		const skip = (page - 1) * limit
-		const transactions = await TransactionModel.find({$text: {$search: tx_ref}}).skip(skip).limit(limit)
+		const transactions = await TransactionModel.find({$text: {$search: status}}).skip(skip).limit(limit)
 
 		// check if there are transactions available for the search
 		if (!transactions || transactions.length < 1) {
@@ -159,7 +180,7 @@ async function searchTransactions (req, res) {
 		}
 
 		// count the relevant search documents in the transaction collection and find the total pages
-		const totalCount = await TransactionModel.countDocuments({$text: {$search: tx_ref}})
+		const totalCount = await TransactionModel.countDocuments({$text: {$search: status}})
 		const totalPages = Math.ceil(totalCount / limit)
 
 		// return the transaction search results and the pagination details
@@ -175,5 +196,6 @@ module.exports = {
 	initiateTransaction,
 	handleTransaction,
 	getTransactions,
+	getTransactionByRef,
 	searchTransactions
 }

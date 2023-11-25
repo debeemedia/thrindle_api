@@ -38,7 +38,7 @@ const transactionSchema = mongoose.Schema({
 }, {timestamps: true})
 
 // enable search text indexes
-transactionSchema.index = ({tx_ref: 'text'})
+transactionSchema.index = ({status: 'text'})
 
 const TransactionModel = mongoose.model('Transaction', transactionSchema)
 

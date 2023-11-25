@@ -27,7 +27,7 @@ In case of errors, the API responds with appropriate HTTP status codes and infor
 
 #### USERS:
 
-#### Register a User
+##### Register a User
 * Endpoint: /users/register
 * Method: POST
 * Description: Allows a user to register.
@@ -78,7 +78,7 @@ Status Code: 400 (Bad Request)
 }
 ```
 
-#### Log In
+##### Log In
 * Endpoint: /users/login
 * Method: POST
 * Description: Allows a registered and verified user to log in (NB: Click the verification link sent in the mail on registration to get verified)
@@ -142,12 +142,57 @@ Status Code: 404 (Not Found)
 }
 ```
 
-#### TRANSACTIONS:
-
-#### Initiate a Transaction
-
-
+##### Authorization
+* Authorization is handled with JWT. The token expires in 1 hour and must be provided in the headers as Authorization for protected routes
+* Response: Below are returned responses when accessing protected routes
+- When no token is provided:
+Status Code: 401 (Unauthorized)
+```
 {
   "success": false,
   "message": "Unauthorized. Please login"
 }
+```
+- When the token is invalid:
+Status Code: 401 (Unauthorized)
+```
+{
+  "success": false,
+  "message": "invalid signature"
+}
+```
+Status Code: 401 (Unauthorized)
+```
+{
+  "success": false,
+  "message": "invalid token"
+}
+```
+- When the token has expired:
+Status Code: 401 (Unauthorized)
+```
+{
+  "success": false,
+  "message": "jwt expired"
+}
+```
+
+#### TRANSACTIONS:
+
+##### Initiate a Transaction
+
+
+##### Get Transactions
+* Endpoint: /transactions
+* Method: GET
+* Description: Allows a logged-in user to get their transactions
+* No Request body
+* Response:
+
+Status Code: 404 (Not Found)
+```
+{
+  "success": false,
+  "message": "No transactions found"
+}
+```

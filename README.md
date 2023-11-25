@@ -367,6 +367,7 @@ Status Code 200 (OK) (returns an object with the message being an object that co
 }
 ```
 Status Code 400 (Bad Request): if no status is provided in request body
+```
 {
   "success": false,
   "message": "Please provide status"

@@ -180,7 +180,48 @@ Status Code: 401 (Unauthorized)
 #### TRANSACTIONS:
 
 ##### Initiate a Transaction
+* Endpoint: /transactions/create
+* Method: POST
+* Description: Allows a logged-in user to create a transaction
+* Parameters:
+ Request body: a JSON object with the key amount (mandatory).
+* Example of request body:
+```
+{
+  "amount": 1
+}
+```
 
+* Response:
+Status Code: 201 (Created); a JSON Object
+```
+{
+  "success": true,
+  "message": "Transaction created successfully",
+  "paymentInitiation": {
+    "status": "success",
+    "message": "Charge initiated",
+    "meta": {
+      "authorization": {
+        "transfer_reference": "FLW-9b838c10a19a4bcf9b6acaa9bcf061fb",
+        "transfer_account": "9466537890",
+        "transfer_bank": "WEMA BANK",
+        "account_expiration": "2023-11-25 14:23:21",
+        "transfer_note": "Please make a bank transfer to Thrindle FLW",
+        "transfer_amount": "1.02",
+        "mode": "banktransfer"
+      }
+    }
+  }
+}
+```
+Status Code 500 (Internal Server Error)
+```
+{
+  "success": false,
+  "message": "Transaction creation unsuccessful"
+}
+```
 
 ##### Get Transactions
 * Endpoint: /transactions
@@ -188,8 +229,150 @@ Status Code: 401 (Unauthorized)
 * Description: Allows a logged-in user to get their transactions
 * No Request body
 * Response:
+Status Code 200 (OK): Returns an object with an array of transactions
+{
+  "success": true,
+  "message": [
+    {
+      "_id": "6561f468dcee5a8e610e6c7d",
+      "user_id": "6561d97b22dff78e8ddfb841",
+      "tx_ref": "TXN-GN52eMtG",
+      "payment_gateway": "Flutterwave",
+      "payment_method": "Bank Transfer",
+      "currency": "NGN",
+      "amount": 1,
+      "status": "pending",
+      "createdAt": "2023-11-25T13:19:36.201Z",
+      "updatedAt": "2023-11-25T13:19:36.201Z"
+    },
+    {
+      "_id": "6561f551ab935ff803413008",
+      "user_id": "6561d97b22dff78e8ddfb841",
+      "tx_ref": "TXN-qkRUTw5F",
+      "payment_gateway": "Flutterwave",
+      "payment_method": "Bank Transfer",
+      "currency": "NGN",
+      "amount": 1,
+      "status": "pending",
+      "createdAt": "2023-11-25T13:23:29.187Z",
+      "updatedAt": "2023-11-25T13:23:29.187Z"
+    }
+  ]
+}
 
 Status Code: 404 (Not Found)
+```
+{
+  "success": false,
+  "message": "No transactions found"
+}
+```
+
+##### Get Transaction by Transaction Reference (tx_ref)
+* Endpoint: /transactions/:tx_ref
+    e.g /transactions/TXN-BmNPUl34
+* Method: GET
+* Description: Allows a logged-in user to get a transaction by tx_ref
+* Parameters:
+    Path parmater: :tx_ref
+* Response
+Status Code 200 (OK)
+```
+{
+  "success": true,
+  "message": {
+    "_id": "6561f9b86b322db38f9f2f2e",
+    "user_id": "6561d97b22dff78e8ddfb841",
+    "tx_ref": "TXN-BmNPUl34",
+    "payment_gateway": "Flutterwave",
+    "payment_method": "Bank Transfer",
+    "currency": "NGN",
+    "amount": 1,
+    "status": "pending",
+    "createdAt": "2023-11-25T13:42:16.598Z",
+    "updatedAt": "2023-11-25T13:42:16.598Z"
+  }
+}
+```
+Status Code 403 (Forbidden): if the user is not the creator of the transaction
+```
+{
+  "success": false,
+  "message": "You are not permitted to access this resource"
+}
+```
+Status Code 404 (Not Found)
+```
+{
+  "success": false,
+  "message": "Transaction not found"
+}
+```
+
+##### Search Transactions
+* Endpoint: /transactions/search
+* Method: POST
+* Description: Allows a logged-in user to search transactions (by status e.g pending, successful, failed)
+* Parameters:
+ Request body: a JSON object with the keys status (mandatory), page, limit (page and limit are for pagination and are optional. If not set, page default is 1 and limit default is 5).
+* Example of request body:
+```
+{
+  "status": "pending",
+  "limit": 2,
+  "page": 1
+}
+```
+* Response:
+Status Code 200 (OK) (returns an object with the message being an object that contains the transactions as an array, and the pagination details as an object)
+```
+{
+  "sucess": true,
+  "message": {
+    "transactions": [
+      {
+        "_id": "6561f9b86b322db38f9f2f2e",
+        "user_id": "6561d97b22dff78e8ddfb841",
+        "tx_ref": "TXN-BmNPUl34",
+        "payment_gateway": "Flutterwave",
+        "payment_method": "Bank Transfer",
+        "currency": "NGN",
+        "amount": 1,
+        "status": "pending",
+        "createdAt": "2023-11-25T13:42:16.598Z",
+        "updatedAt": "2023-11-25T13:42:16.598Z",
+        "__v": 0
+      },
+      {
+        "_id": "6561f551ab935ff803413008",
+        "user_id": "6561d97b22dff78e8ddfb841",
+        "tx_ref": "TXN-qkRUTw5F",
+        "payment_gateway": "Flutterwave",
+        "payment_method": "Bank Transfer",
+        "currency": "NGN",
+        "amount": 1,
+        "status": "pending",
+        "createdAt": "2023-11-25T13:23:29.187Z",
+        "updatedAt": "2023-11-25T13:23:29.187Z",
+        "__v": 0
+      }
+    ],
+    "pagination": {
+      "page": 1,
+      "limit": 2,
+      "totalPages": 2,
+      "totalCount": 3
+    }
+  }
+}
+```
+Status Code 400 (Bad Request): if no status is provided in request body
+{
+  "success": false,
+  "message": "Please provide status"
+}
+```
+Status Code 404 (Not Found): if no transaction is found
 ```
 {
   "success": false,

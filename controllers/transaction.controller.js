@@ -9,20 +9,22 @@ const base_api_url = 'https://api.flutterwave.com/v3'
 async function initiateTransaction (req, res) {
 	try {
 		// destructure user input from request body
-		const {amount} = +req.body
+		const {amount} = req.body
 
 		// find the id of the logged-in user, then find the user from the database
 		const user_id = req.user.id
 		const user = await UserModel.findById(user_id)
 
-		// define transaction details for flutterwave and generate unique tx_ref
+		// generate unique tx_ref
+		const tx_ref = `TXN-${debeerandomgen(8)}`
+		// define transaction details for flutterwave
 		const transactionData = {
 			amount,
 			currency: 'NGN',
 			email: user.email,
 			phone_number: user.phone_number,
 			full_name: `${user.first_name} ${user.last_name}`,
-			tx_ref: `TXN-${debeerandomgen(8)}`,
+			tx_ref,
 			narration: 'Thrindle'
 		}
 
@@ -55,11 +57,11 @@ async function initiateTransaction (req, res) {
 		sendMail(emailOption, res)
 
 		// send a response
-		res.status(201).json({success: true, message: 'Transaction initiated successfully'})
+		res.status(201).json({success: true, message: 'Transaction created successfully', paymentInitiation: response.data})
 
 	} catch (error) {
 		console.error(error.message)
-		res.status(500).json({success: false, message: 'Transaction initiation unsuccessful'})
+		res.status(500).json({success: false, message: 'Transaction creation unsuccessful'})
 	}
 }
 
@@ -145,10 +147,14 @@ async function getTransactionByRef (req, res) {
 		// destructure the tx_ref from the request params
 		const {tx_ref} = req.params
 		// find the user's transaction by tx_ref
-		const transaction = await TransactionModel.find({user_id}, {tx_ref}).select('-__v')
+		const transaction = await TransactionModel.findOne({tx_ref}).select('-__v')
 		// check if there is a transaction record
 		if (!transaction) {
-			return res.status(404).json({success: false, message: 'No transaction found'})
+			return res.status(404).json({success: false, message: 'Transaction not found'})
+		}
+		// check if the user is the creator of the transaction
+		if (transaction.user_id != user_id) {
+			return res.status(403).json({success: false, message: 'You are not permitted to access this resource'})
 		}
 		// return response
 		res.status(200).json({success: true, message: transaction})
@@ -162,9 +168,9 @@ async function getTransactionByRef (req, res) {
 async function searchTransactions (req, res) {
 	try {
 		// get the search query which is the transaction status as well as page and limit for pagination from the request body
-		const {status} = req.body
-		const {page} = +req.body || 1 // set defaults
-		const {limit} = +req.body || 10 // set defaults
+		const status = req.body.status
+		const page = +req.body.page || 1 // set defaults
+		const limit = +req.body.limit || 5 // set defaults
 
 		// check if status is provided
 		if (!status) {

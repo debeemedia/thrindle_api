@@ -1,3 +1,4 @@
+const UserModel = require("../models/user.model")
 const { buildEmailTemplate, sendMail } = require("../utils/send.mail")
 
 async function verifyMail (req, res, next) {

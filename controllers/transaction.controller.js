@@ -70,7 +70,7 @@ async function handleTransaction (req, res) {
 		// use hash in the webhook to verify the authenticity of the payload
 		const hash = process.env.FLUTTERWAVE_WEBHOOK_HASH
 		const signature = req.headers['verif-hash']
-		if (!signature || signature != secretHash) {
+		if (!signature || signature != hash) {
 			return res.status(401).json({success: false, message: 'No/Invalid webhook secret hash'})
 		}
 

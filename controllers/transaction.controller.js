@@ -12,7 +12,7 @@ async function initiateTransaction (req, res) {
 
 		// find the id of the logged-in user, then find the user from the database
 		const user_id = req.user.id
-		const user = await UserModelfindById(user_id)
+		const user = await UserModel.findById(user_id)
 
 		// define transaction details for flutterwave and generate unique tx_ref
 		const transactionData = {

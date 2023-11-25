@@ -13,8 +13,8 @@ afterEach(async () => {
 describe('POST /api/users/register', () => {
 	test('should register a new user', async () => {
 		const option = {
-			email: 'okekedeborah@gmail.com',
-			username: 'debee',
+			email: 'debeemediasolutions@gmail.com',
+			username: 'debeemedia',
 			password: 'password',
 			first_name: 'Deborah',
 			last_name: 'Okeke',

@@ -32,9 +32,7 @@ describe('GET /api/transactions', () => {
 describe('POST /api/transactions/search', () => {
 	test('should search for a logged-in user\'s transaction', async () => {
 		const option = {
-			tx_ref: 'TXN-rui8T3o5',
-			page: 1,
-			limit: 3
+			status: 'pending'
 		}
 		const response = await app.post('/api/transactions/search').send(option)
 		expect(response.status).toBe(200)

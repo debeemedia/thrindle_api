@@ -69,12 +69,9 @@ async function handleTransaction (req, res) {
 	try {
 		// use hash in the webhook to verify the authenticity of the payload
 		const hash = process.env.FLUTTERWAVE_WEBHOOK_HASH
-		const signature = req.headers.verif-hash
-		if (!signature) {
-			return res.status(401).json({success: false, message: 'No secret hash provided'})
-		}
-		if (signature != hash) {
-			return res.status(401).json({success: false, message: 'Invalid secret hash'})
+		const signature = req.headers['verif-hash']
+		if (!signature || signature != secretHash) {
+			return res.status(401).json({success: false, message: 'No/Invalid webhook secret hash'})
 		}
 
 		// get payload from flutterwave and find the user and transaction records in the database

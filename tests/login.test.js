@@ -5,7 +5,7 @@ const serverApp = require('../server')
 const app = request(serverApp)
 
 beforeEach(async () => {
-    await mongoose.connect(process.env.MONGODB_TEST_URL)
+    await mongoose.connect(process.env.MONGODB_URL)
 })
 
 afterEach(async () => {

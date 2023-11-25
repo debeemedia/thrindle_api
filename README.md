@@ -28,6 +28,8 @@ In case of errors, the API responds with appropriate HTTP status codes and infor
 #### USERS:
 
 ##### Register a User
+NB: Email (with verification link) is sent to the user on successful registration
+
 * Endpoint: /users/register
 * Method: POST
 * Description: Allows a user to register.
@@ -178,6 +180,7 @@ Status Code: 401 (Unauthorized)
 ```
 
 #### TRANSACTIONS:
+NB: Email is sent to the user when a transaction is initiated, succeeds or fails.
 
 ##### Initiate a Transaction
 * Endpoint: /transactions/create

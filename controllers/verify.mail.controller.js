@@ -41,7 +41,7 @@ async function sendConfirmationMail (req, res) {
 		}
 		await sendMail(emailOption, res)
 		// redirect the user from mail
-		res.redirect('https://thindle-debee.onrender.com')
+		res.redirect('https://thrindle-debee.onrender.com')
 
 	} catch (error) {
 		console.error(error.message)

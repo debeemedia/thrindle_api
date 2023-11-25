@@ -101,13 +101,14 @@ Status Code: 400 (Bad Request)
 
 * Response:
 Status Code: 200 (OK)
-A token is sent in the response.message; this token must be provided in the headers for authorization in protected routes
+A token is sent in the response.message; this token expires in 1 hour and must be provided in the headers as Authorization for protected routes
 ```
 {
   "success": true,
   "message": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1NjFkOTdiMjJkZmY3OGU4ZGRmYjg0MSIsInVzZXJuYW1lIjoiZGViZWUiLCJpYXQiOjE3MDA5MTMwMjcsImV4cCI6MTcwMDkxNjYyN30.hWaUuR7VuvWmFwgvtzI7qyA7emYvaDUIz8S80UpQMuQ"
 }
 ```
+NB: The token above is just a sample
 
 Status Code: 400 (Bad Request)
 ```
@@ -144,3 +145,9 @@ Status Code: 404 (Not Found)
 #### TRANSACTIONS:
 
 #### Initiate a Transaction
+
+
+{
+  "success": false,
+  "message": "Unauthorized. Please login"
+}

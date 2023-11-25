@@ -125,7 +125,7 @@ async function getTransactions (req, res) {
 		// find the user's transactions
 		const transactions = await TransactionModel.find({user_id}).select('-__v')
 		// check if there are transaction records
-		if (!transactions) {
+		if (!transactions || transactions.length < 1) {
 			return res.status(404).json({success: false, message: 'No transactions found'})
 		}
 		// return response

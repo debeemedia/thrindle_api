@@ -84,14 +84,14 @@ async function handleTransaction (req, res) {
 
 		// check if transaction was successful
 		if (payload.data.status === 'successful' && payload.data.charged_amount >= payload.data.amount) {
-			// update transaction record to completed
-			await TransactionModel.findByIdAndUpdate(transaction_id, {status: 'completed'})
+			// update transaction record to successful
+			await TransactionModel.findByIdAndUpdate(transaction_id, {status: 'successful'})
 
 			// send mail to the user
 			const emailOption = {
 				to: user.email,
 				from: 'Thrindle',
-				subject: 'Transaction Completed',
+				subject: 'Transaction Successful',
 				html: await buildEmailTemplate('transaction.successful.ejs', transaction)
 			}
 			sendMail(emailOption, res)

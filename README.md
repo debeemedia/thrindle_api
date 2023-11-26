@@ -12,7 +12,7 @@
 ## Documentation
 
 ### Overview
-This API allows authorized users to make money transfers using [Flutterwave]('https://developer.flutterwave.com') payment gateway, as well as list and search their transfer history.
+This API allows authorized users to make money transfers using [Flutterwave](https://developer.flutterwave.com) payment gateway, as well as list and search their transfer history.
 
 ### Base URL
 The base URL for this API is https://thrindle-debee.onrender.com/api

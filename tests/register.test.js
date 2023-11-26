@@ -1,16 +1,8 @@
 require('dotenv').config()
-const mongoose = require('mongoose')
+require('./tests.setup')
 const request = require('supertest')
 const serverApp = require('../server')
 const app = request(serverApp)
-
-beforeAll(async () => {
-	await mongoose.connect(process.env.MONGODB_URL)
-});
-
-afterAll(async () => {
-	await mongoose.connection.close()
-})
 
 describe('POST /api/users/register', () => {
 	test('should register a new user', async () => {

@@ -188,7 +188,7 @@ async function searchTransactions (req, res) {
 		const totalPages = Math.ceil(totalCount / limit)
 
 		// return the transaction search results and the pagination details
-		res.status(200).json({sucess: true, message: {transactions, pagination: {page, limit, totalPages, totalCount}}})
+		res.status(200).json({success: true, message: {transactions, pagination: {page, limit, totalPages, totalCount}}})
 		
 	} catch (error) {
 		console.error(error.message)

@@ -330,7 +330,7 @@ Status Code 404 (Not Found)
 Status Code 200 (OK) (returns an object with the message being an object that contains the transactions as an array, and the pagination details as an object)
 ```
 {
-  "sucess": true,
+  "success": true,
   "message": {
     "transactions": [
       {

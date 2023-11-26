@@ -233,6 +233,7 @@ Status Code 500 (Internal Server Error)
 * No Request body
 * Response:
 Status Code 200 (OK): Returns an object with an array of transactions
+```
 {
   "success": true,
   "message": [
@@ -262,6 +263,7 @@ Status Code 200 (OK): Returns an object with an array of transactions
     }
   ]
 }
+```
 
 Status Code: 404 (Not Found)
 ```
